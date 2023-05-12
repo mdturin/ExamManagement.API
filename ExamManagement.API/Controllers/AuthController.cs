@@ -1,6 +1,5 @@
 ﻿using ExamManagement.API.Models;
 using ExamManagement.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExamManagement.API.Controllers
@@ -35,7 +34,7 @@ namespace ExamManagement.API.Controllers
             var password = request.Password;
             AuthService.CreatePasswordHash(
                 password, out byte[] passwordHash, out byte[] passwordSalt);
-            user = AuthService.CreateUser(request, passwordHash, passwordSalt);
+            user = await AuthService.CreateUserAsync(request, passwordHash, passwordSalt);
             return Ok(user);
         }
     }

@@ -1,11 +1,25 @@
+using ExamManagement.API.Models;
+using MongoDB.Driver;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Mongo db settings
+builder.Services.Configure<MongoDBSettings>(
+    builder.Configuration.GetSection(nameof(MongoDBSettings)));
+builder.Services.AddSingleton<IMongoDatabase>(options =>
+{
+    var settings = builder.Configuration.GetSection(
+               nameof(MongoDBSettings)).Get<MongoDBSettings>();
+    var client = new MongoClient(settings!.ConnectionString);
+    return client.GetDatabase(settings.DatabaseName);
+});
 
 var app = builder.Build();
 
