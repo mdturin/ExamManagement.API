@@ -11,12 +11,10 @@ namespace ExamManagement.API.Services;
 public class AuthService : IAuthService
 {
     private readonly IConfiguration _config;
-    private readonly UserDb _userDb;
 
-    public AuthService(IConfiguration config, UserDb userDb)
+    public AuthService(IConfiguration config)
     {
         _config = config;
-        _userDb = userDb;
     }
 
     public void CreatePasswordHash(
@@ -26,18 +24,6 @@ public class AuthService : IAuthService
         passwordSalt = hmac.Key;
         passwordHash = hmac.ComputeHash(
             Encoding.UTF8.GetBytes(password));
-    }
-
-    public async Task<User> CreateUserAsync(
-        UserDto request, byte[] passwordHash, byte[] passwordSalt)
-    {
-        var name = request.Name;
-        var email = request.Email;
-        var role = request.Role;
-        var user = new User(
-            name, email, passwordHash, passwordSalt, role);
-        await _userDb.CreateUserAsync(user);
-        return user;
     }
 
     public string GenerateJwtToken(User user)
@@ -67,6 +53,5 @@ public interface IAuthService
 {
     void CreatePasswordHash(
         string password, out byte[] passwordHash, out byte[] passwordSalt);
-    Task<User> CreateUserAsync(UserDto request, byte[] passwordHash, byte[] passwordSalt);
     string GenerateJwtToken(User user);
 }

@@ -10,10 +10,12 @@ namespace ExamManagement.API.Controllers
     {
         public IAuthService AuthService { get; }
         public UtilityService Service { get; }
+        public IDbService DbService { get; }
 
-        public AuthController(IAuthService authService, UtilityService service)
+        public AuthController(IAuthService authService, UtilityService service, IDbService dbService)
         {
             Service = service;
+            DbService = dbService;
             AuthService = authService;
         }
 
@@ -33,10 +35,17 @@ namespace ExamManagement.API.Controllers
             AuthService.CreatePasswordHash(
                 request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            var user = await AuthService
+            var user = await DbService
                 .CreateUserAsync(request, passwordHash, passwordSalt);
             
             return Ok(user);
+        }
+
+        [HttpGet("User")]
+        public async Task<ActionResult<List<User>>> GetUser()
+        {
+            var users = await DbService.GetUsersAsync();
+            return Ok(users);
         }
     }
 }
