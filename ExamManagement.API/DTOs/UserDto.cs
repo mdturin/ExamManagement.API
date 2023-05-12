@@ -1,4 +1,4 @@
-﻿namespace ExamManagement.API.Models;
+﻿namespace ExamManagement.API.DTOs;
 
 public class UserDto
 {

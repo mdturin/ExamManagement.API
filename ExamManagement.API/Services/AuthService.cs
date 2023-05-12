@@ -47,6 +47,15 @@ public class AuthService : IAuthService
         var userToken = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(userToken);
     }
+
+    public bool VerifyPasswordHash(
+        string password, byte[] passwordHash, byte[] passwordSalt)
+    {
+        using var hmac = new HMACSHA512(passwordSalt);
+        var computedHash = hmac
+            .ComputeHash(Encoding.UTF8.GetBytes(password));
+        return computedHash.SequenceEqual(passwordHash);
+    }
 }
 
 public interface IAuthService
@@ -54,4 +63,5 @@ public interface IAuthService
     void CreatePasswordHash(
         string password, out byte[] passwordHash, out byte[] passwordSalt);
     string GenerateJwtToken(User user);
+    bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
 }

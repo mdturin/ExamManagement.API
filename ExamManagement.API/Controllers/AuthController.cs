@@ -1,4 +1,5 @@
-﻿using ExamManagement.API.Models;
+﻿using ExamManagement.API.DTOs;
+using ExamManagement.API.Models;
 using ExamManagement.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +42,31 @@ namespace ExamManagement.API.Controllers
                 .CreateUserAsync(request, passwordHash, passwordSalt);
             
             return Ok(user);
+        }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<User>> Login(UserLoginDto request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Invalid client request");
+            }
+            if (Service.ValidLoginRequest(request) == false)
+            {
+                return BadRequest("Invalid client request");
+            }
+            var user = await DbService.GetUserAsync(request.Email);
+            if (user == null)
+            {
+                return BadRequest("Invalid client request");
+            }
+            if (AuthService.VerifyPasswordHash(
+                request.Password, user.PasswordHash!, user.PasswordSalt!) == false)
+            {
+                return BadRequest("Invalid client request");
+            }
+            var token = AuthService.GenerateJwtToken(user);
+            return Ok(token);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ExamManagement.API.Data;
+using ExamManagement.API.DTOs;
 using ExamManagement.API.Models;
 
 namespace ExamManagement.API.Services;
@@ -24,10 +25,14 @@ public class DbService : IDbService
         return user;
     }
 
+    public async Task<User> GetUserAsync(string email)
+    {
+        return await _userDb.GetUserAsync(email);
+    }
+
     public async Task<List<User>> GetUsersAsync()
     {
-        var users = await _userDb.GetUsersAsync();
-        return users;
+        return await _userDb.GetUsersAsync();
     }
 }
 
@@ -35,4 +40,5 @@ public interface IDbService
 {
     Task<List<User>> GetUsersAsync();
     Task<User> CreateUserAsync(UserDto request, byte[] passwordHash, byte[] passwordSalt);
+    Task<User> GetUserAsync(string email);
 }
