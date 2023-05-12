@@ -44,6 +44,14 @@ builder.Services
         };
     });
 
+// Policy Roles
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("User", policy => policy.RequireRole("User"));
+    options.AddPolicy("Student", policy => policy.RequireRole("Student"));
+});
+
 // Services
 builder.Services.AddSingleton<UserDb>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
