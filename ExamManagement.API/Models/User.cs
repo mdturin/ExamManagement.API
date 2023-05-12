@@ -1,18 +1,18 @@
-﻿namespace ExamManagement.API.Models;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace ExamManagement.API.Models;
 
 public class User
 {
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
     public string? Name { get; set; }
     public string? Email { get; set; }
     public byte[]? PasswordHash { get; set; }
     public byte[]? PasswordSalt { get; set; }
     public string Role { get; set; } = "Student"; // "Admin" or "Student
-    public string UserId { get; set; }
-
-    public User()
-    {
-        UserId = Guid.NewGuid().ToString();
-    }
 
     public User(
         string name, 
@@ -26,11 +26,5 @@ public class User
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;
         Role = role;
-        UserId = Guid.NewGuid().ToString();
-    }
-
-    public string GetId()
-    {
-        return UserId;
     }
 }

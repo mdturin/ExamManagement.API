@@ -26,7 +26,8 @@ public class DbService : IDbService
 
     public async Task<List<User>> GetUsersAsync()
     {
-        return await _userDb.GetUsersAsync();
+        var users = await _userDb.GetUsersAsync();
+        return users;
     }
 }
 

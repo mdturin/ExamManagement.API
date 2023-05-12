@@ -1,4 +1,6 @@
+using ExamManagement.API.Data;
 using ExamManagement.API.Models;
+using ExamManagement.API.Services;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,12 @@ builder.Services.AddSingleton<IMongoDatabase>(options =>
     var client = new MongoClient(settings!.ConnectionString);
     return client.GetDatabase(settings.DatabaseName);
 });
+
+// Services
+builder.Services.AddSingleton<UserDb>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddSingleton<IDbService, DbService>();
+builder.Services.AddSingleton<UtilityService>();
 
 var app = builder.Build();
 

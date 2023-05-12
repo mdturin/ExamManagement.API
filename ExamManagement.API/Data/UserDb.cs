@@ -20,13 +20,12 @@ public class UserDb
 
     public async Task<User> GetUserAsync(string email)
     {
-        var user = await _user.Find(u => u.Email == email).FirstOrDefaultAsync();
-        return user;
+        return await _user.Find(u => u.Email == email).FirstOrDefaultAsync();
     }
 
     public async Task<User> GetUserByIdAsync(string userId)
     {
-        var user = await _user.Find(u => u.UserId == userId).FirstOrDefaultAsync();
+        var user = await _user.Find(u => u.Id == userId).FirstOrDefaultAsync();
         return user;
     }
 
@@ -38,13 +37,13 @@ public class UserDb
 
     public async Task<User> UpdateUserAsync(User user)
     {
-        await _user.ReplaceOneAsync(u => u.UserId == user.UserId, user);
+        await _user.ReplaceOneAsync(u => u.Id == user.Id, user);
         return user;
     }
 
     public async Task<User> DeleteUserAsync(string userId)
     {
-        var user = await _user.FindOneAndDeleteAsync(u => u.UserId == userId);
+        var user = await _user.FindOneAndDeleteAsync(u => u.Id == userId);
         return user;
     }
 }
