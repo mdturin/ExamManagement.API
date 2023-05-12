@@ -8,7 +8,6 @@ namespace ExamManagement.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
         public IAuthService AuthService { get; }
         public UtilityService Service { get; }
 
@@ -31,10 +30,12 @@ namespace ExamManagement.API.Controllers
                 return BadRequest("Invalid client request");
             }
 
-            var password = request.Password;
             AuthService.CreatePasswordHash(
-                password, out byte[] passwordHash, out byte[] passwordSalt);
-            user = await AuthService.CreateUserAsync(request, passwordHash, passwordSalt);
+                request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            var user = await AuthService
+                .CreateUserAsync(request, passwordHash, passwordSalt);
+            
             return Ok(user);
         }
     }
